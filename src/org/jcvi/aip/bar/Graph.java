@@ -72,15 +72,25 @@ public class Graph {
 	
 	public String toJSON() {
 		StringBuffer buf = new StringBuffer();
-		buf.append("nodes: [");
+		buf.append("{ \"nodes\": [");
+		boolean first = true;
 		for (Protein p : proteins) {
-			buf.append(" { data: { id: '" + p.getName() + "', name: '" + p.getName() + "' } }, ");
+			if (!first) {
+				buf.append(",");
+			}
+			buf.append(" { \"data\": { \"id\": \"" + p.getName() + "\", \"name\": \"" + p.getName() + "\" } }");
+			first = false;
 		}
-		buf.append("], edges: [");
+		buf.append(" ], \"edges\": [");
+		first = true;
 		for (Interaction i : interactions) {
-			buf.append(" { data: { source: '" + i.getProteinA().getName() + "', target: '" + i.getProteinB().getName() + "' } }, ");
+			if (!first) {
+				buf.append(",");
+			}
+			buf.append(" { \"data\": { \"source\": \"" + i.getProteinA().getName() + "\", \"target\": \"" + i.getProteinB().getName() + "\" } }");
+			first = false;
 		}
-		buf.append("] ");
+		buf.append(" ] }");
 		return buf.toString();
 	}
 

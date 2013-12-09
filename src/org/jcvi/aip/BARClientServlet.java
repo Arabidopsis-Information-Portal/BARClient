@@ -43,11 +43,9 @@ public class BARClientServlet extends HttpServlet {
 			Graph graph = client.load(query);
 			String json = graph.toJSON();
 			
-			response.setContentType("text/html");
+			response.setContentType("application/json");
 			PrintWriter pw = response.getWriter();
-			pw.println("<pre>");
-			pw.println(json);
-			pw.println("</pre>");
+			pw.print(json);
 			pw.flush();
 			
 			
