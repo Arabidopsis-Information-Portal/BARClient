@@ -139,7 +139,7 @@
 <body>
 <hr>
 <h3 align="center">Cytoscape.js Viewer</h3>
-<p align="center">Show <em>Arabidopsis thaliana</em> Protein Interaction data queried from <a href="http://bar.utoronto.ca/">BAR's</a> (The Bio-Analytic Resource for Plant Biology) PSICQUIC webservices</p>
+<p align="center"><em>Arabidopsis thaliana</em> protein interaction data queried from <a href="http://bar.utoronto.ca/">BAR's</a> (The Bio-Analytic Resource for Plant Biology) PSICQUIC webservices</p>
 <hr>
 <table border="0" cellpadding="5">
 <tr>
