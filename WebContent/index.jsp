@@ -10,7 +10,7 @@
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
     <meta charset=utf-8 />
-    <title>Cytoscape.js initialisation</title>
+    <title>Cytoscape.js Demo</title>
     <style type="text/css">
         body { 
           font: 14px helvetica neue, helvetica, arial, sans-serif;
@@ -21,7 +21,25 @@
           width: 80%;
           position: absolute;
           left: 0;
-          top: 500;
+          top: 150px;
+        }
+        
+        .warning, .error {
+          border: 1px solid;
+          margin: 10px 0px;
+          padding: 15px 10px 15px 50px;
+          background-repeat: no-repeat;
+          background-position: 10px center;
+        }
+        
+        .warning {
+          color: #9F6000;
+          background-color: #FEEFB3;
+        }
+        
+        .error {
+          color: #D8000C;
+          background-color: #FFBABA;
         }
     </style>
     <script type="text/javascript">
@@ -55,8 +73,6 @@
             ready: function(){
                 window.cy = this;
     
-                // giddy up...
-    
                 cy.elements().unselectify();
                 cy.zoomingEnabled(false);
                 cy.fit();
@@ -80,22 +96,27 @@
     
         var query = $('#query').val();
         console.log("Query: " + query);
+        var encodedQuery = encodeURIComponent(query);
     
         $.ajax({
             dataType: "json",
             type: 'GET',
-            url: "http://localhost:8180/BARClient/get_data",
-            data: {'query': query},
+            url: "get_data",
+            data: {'query': encodedQuery},
             beforeSend: function(jqXHR, settings) {
                 url = settings.url + "?" + settings.data;
             },
             success: function(elements) {
-                window.elements = elements;
-                cy.load(elements)
+                console.log("URL: " + url);
+                if (jQuery.isEmptyObject(elements)) {
+                    $('#status').html("Query returned no results.").addClass('warning');
+                } else {
+                    window.elements = elements;
+                    cy.load(elements)
+                }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                //alert("Status: " + textStatus + "  Error: " + errorThrown);
-                alert("Status: " + textStatus + "  URL: " + url + "  Error: " + errorThrown);
+                $('#status').html("Status: " + textStatus + "  URL: " + url + "  Error: " + errorThrown).addClass('error');
             },
             complete: function(response) {
                 console.log("Response.status = " + response.status);
@@ -107,6 +128,9 @@
     
     $(function(){
         $('#submit').button().click(function(){
+            $('#status').empty();
+            $('#status').removeClass('warning');
+            $('#status').removeClass('error');
             loadCy();
         });
     });
@@ -114,7 +138,15 @@
 </head>
 <body>
 <hr>
-Query: <input type="text" id="query"/> <button id="submit">Submit</button>
+<h3 align="center">Cytoscape.js Viewer</h3>
+<p align="center">Show <em>Arabidopsis thaliana</em> Protein Interaction data queried from <a href="http://bar.utoronto.ca/">BAR's</a> (The Bio-Analytic Resource for Plant Biology) PSICQUIC webservices</p>
+<hr>
+<table border="0" cellpadding="5">
+<tr>
+<td nowrap><b>Query</b> <em style="font-size: .8em;">(Any gene name or AGI ID, e.g. ASK1, AT1G10940, AT3G62980)</em>: <input type="text" id="query"/> <button id="submit">Submit</button></td>
+<td align="left" width="99%"><div id="status"></div></td>
+</tr>
+</table>
 <hr>
 <div id="cy"></div>
 

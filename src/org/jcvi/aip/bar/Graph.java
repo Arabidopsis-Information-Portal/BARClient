@@ -72,25 +72,29 @@ public class Graph {
 	
 	public String toJSON() {
 		StringBuffer buf = new StringBuffer();
-		buf.append("{ \"nodes\": [");
-		boolean first = true;
-		for (Protein p : proteins) {
-			if (!first) {
-				buf.append(",");
+		if (proteins.size() > 0) {
+			buf.append("{ \"nodes\": [");
+			boolean first = true;
+			for (Protein p : proteins) {
+				if (!first) {
+					buf.append(",");
+				}
+				buf.append(" { \"data\": { \"id\": \"" + p.getName() + "\", \"name\": \"" + p.getName() + "\" } }");
+				first = false;
 			}
-			buf.append(" { \"data\": { \"id\": \"" + p.getName() + "\", \"name\": \"" + p.getName() + "\" } }");
-			first = false;
-		}
-		buf.append(" ], \"edges\": [");
-		first = true;
-		for (Interaction i : interactions) {
-			if (!first) {
-				buf.append(",");
+			buf.append(" ], \"edges\": [");
+			first = true;
+			for (Interaction i : interactions) {
+				if (!first) {
+					buf.append(",");
+				}
+				buf.append(" { \"data\": { \"source\": \"" + i.getProteinA().getName() + "\", \"target\": \"" + i.getProteinB().getName() + "\" } }");
+				first = false;
 			}
-			buf.append(" { \"data\": { \"source\": \"" + i.getProteinA().getName() + "\", \"target\": \"" + i.getProteinB().getName() + "\" } }");
-			first = false;
+			buf.append(" ] }");
+		} else {
+			buf.append("{}");
 		}
-		buf.append(" ] }");
 		return buf.toString();
 	}
 
